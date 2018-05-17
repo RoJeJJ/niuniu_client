@@ -6,18 +6,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.support.annotation.RawRes;
+import android.util.Log;
 import android.util.LruCache;
 
 
 public class BitmapUtil {
     private LruCache<String,Bitmap> cache;
     private Resources resources;
-    private int screenWidth;
-    private int screenHeight;
+    private float xScale;
+    private float yScale;
     public BitmapUtil(Context context){
         resources = context.getResources();
-        screenHeight = context.getResources().getDisplayMetrics().heightPixels;
-        screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        int screenHeight = context.getResources().getDisplayMetrics().heightPixels;
+        int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        xScale = ((float) screenWidth)/2560;
+        yScale = ((float) screenHeight)/1440;
         int maxSize = (int) Runtime.getRuntime().maxMemory();
         int cacheSize = maxSize / 1024 / 8;
         cache = new LruCache<String, Bitmap>(cacheSize){
@@ -41,25 +44,27 @@ public class BitmapUtil {
         options.inPurgeable = true;
         options.inInputShareable = true;
         src = BitmapFactory.decodeResource(resources,res,options);
+        Log.i(key,"width:"+src.getWidth()+",height:"+src.getHeight());
         Matrix matrix = new Matrix();
-        matrix.postScale(1280f/screenWidth,720f/screenHeight);
+        matrix.postScale(xScale,yScale);
         Bitmap scaleSrc = Bitmap.createBitmap(src,0,0,src.getWidth(),src.getHeight(),matrix,true);
         src.recycle();
         cache.put(key,scaleSrc);
         return scaleSrc;
     }
-    private int calculateInSampleSize(BitmapFactory.Options op, int reqWidth, int reqheight) {
-        int originalWidth = op.outWidth;
-        int originalHeight = op.outHeight;
-        int inSampleSize = 1;
-        if (originalWidth > reqWidth || originalHeight > reqheight) {
-            int halfWidth = originalWidth / 2;
-            int halfHeight = originalHeight / 2;
-            while ((halfWidth / inSampleSize > reqWidth)
-                    &&(halfHeight / inSampleSize > reqheight)) {
-                inSampleSize *= 2;
-            }
-        }
-        return inSampleSize;
-    }
+
+//    private int calculateInSampleSize(BitmapFactory.Options op, int reqWidth, int reqheight) {
+//        int originalWidth = op.outWidth;
+//        int originalHeight = op.outHeight;
+//        int inSampleSize = 1;
+//        if (originalWidth > reqWidth || originalHeight > reqheight) {
+//            int halfWidth = originalWidth / 2;
+//            int halfHeight = originalHeight / 2;
+//            while ((halfWidth / inSampleSize > reqWidth)
+//                    &&(halfHeight / inSampleSize > reqheight)) {
+//                inSampleSize *= 2;
+//            }
+//        }
+//        return inSampleSize;
+//    }
 }

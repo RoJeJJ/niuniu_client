@@ -8,9 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
@@ -94,13 +92,18 @@ public class LoginView extends SurfaceView implements SurfaceHolder.Callback,Run
             }
         }
     }
+    private float x;
+    private float y;
     private void drawBG(){
-        Bitmap bg = mBUtil.getBitmap("login_bg",R.raw.denglujiemian01);
-        Rect rect = new Rect(0,0,screenWidth,screenHeight);
-        mCanvas.drawBitmap(bg,null,rect,mPaint);
+        Bitmap bg = mBUtil.getBitmap("login_bg",R.drawable.denglujiemian01);
+        Matrix matrix = new Matrix();
+        x = ((float) screenWidth)/bg.getWidth();
+        y = ((float)screenHeight)/bg.getHeight();
+        matrix.postScale(x,y);
+        mCanvas.drawBitmap(bg,matrix,mPaint);
     }
     private void drawLogo(){
-        Bitmap logo = mBUtil.getBitmap("login_logo",R.raw.denglujiemian05);
+        Bitmap logo = mBUtil.getBitmap("login_logo",R.drawable.denglujiemian05);
         Matrix matrix = new Matrix();
         float f = frame % 61;
         float y;
@@ -109,13 +112,14 @@ public class LoginView extends SurfaceView implements SurfaceHolder.Callback,Run
         }else {
             y = (60 - f) * 0.16f;
         }
-        matrix.postTranslate(186 * xScale,131 * yScale +y);
+        matrix.postTranslate(189 * xScale,160 * yScale +y);
+        matrix.postScale(x,this.y);
         mCanvas.drawBitmap(logo,matrix,mPaint);
         if (f == 60)
             reversal = !reversal;
     }
     private void drawCup(){
-        Bitmap cup = mBUtil.getBitmap("logo_cup",R.raw.denglujiemian03);
+        Bitmap cup = mBUtil.getBitmap("logo_cup",R.drawable.denglujiemian03);
         Matrix matrix = new Matrix();
         float f = frame % 61;
         float y;
@@ -124,19 +128,26 @@ public class LoginView extends SurfaceView implements SurfaceHolder.Callback,Run
         }else {
             y = (60 - f) * 0.2f;
         }
-        matrix.postTranslate(0,237 * yScale + y);
+        matrix.postTranslate(0,238 * yScale + y);
         mCanvas.drawBitmap(cup,matrix,mPaint);
     }
     private void drawGold() {
-        Bitmap gold = mBUtil.getBitmap("logo_gold",R.raw.denglujiemian02);
+        Bitmap gold = mBUtil.getBitmap("logo_gold",R.drawable.denglujiemian02);
         Matrix matrix = new Matrix();
-        matrix.postTranslate(81 * xScale,328 * yScale);
+        matrix.postTranslate(77 * xScale,335 * yScale);
         mCanvas.drawBitmap(gold,matrix,mPaint);
     }
     private void drawLoginFrame(){
-        Bitmap loginFrame = mBUtil.getBitmap("login_frame",R.raw.denglujiemian09);
-        Rect rect = new Rect(0,0,screenWidth,screenHeight);
-        mCanvas.drawBitmap(loginFrame,null,rect,mPaint);
+        Bitmap loginFrame = mBUtil.getBitmap("login_frame",R.drawable.denglujiemian09);
+        Matrix matrix = new Matrix();
+        matrix.postScale(((float) screenWidth)/loginFrame.getWidth(),((float)screenHeight)/loginFrame.getHeight());
+        mCanvas.drawBitmap(loginFrame,matrix,mPaint);
+    }
+    private void drawButton(){
+        Bitmap btn = mBUtil.getBitmap("btn",R.drawable.denglujiemian10);
+        Matrix matrix = new Matrix();
+        matrix.postTranslate(504 * xScale,530 * yScale);
+        mCanvas.drawBitmap(btn,matrix,mPaint);
     }
     public void myDraw(){
         drawBG();
@@ -144,5 +155,6 @@ public class LoginView extends SurfaceView implements SurfaceHolder.Callback,Run
         drawGold();
         drawLogo();
         drawLoginFrame();
+        drawButton();
     }
 }
