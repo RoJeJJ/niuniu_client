@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">niuniu</string>
+    <string name="game_tip">抵制不良游戏&#160;拒绝盗版游戏&#160;注意自我保护&#160;谨防受骗上当&#160;适度游戏益脑&#160;沉迷游戏伤身</string>
+    <string name="version">ver:%1$s</string>
+    <string name="conn_success">服务器连接成功!</string>
+    <string name="conn_fail">服务器连接失败!</string>
+</resources>
