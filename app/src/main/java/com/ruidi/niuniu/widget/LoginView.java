@@ -27,6 +27,7 @@ public class LoginView extends SurfaceView implements SurfaceHolder.Callback,Run
     private boolean reversal;
     private float xScale;
     private float yScale;
+    private float yTranslate;
     public LoginView(Context context) {
         this(context,null);
     }
@@ -39,8 +40,9 @@ public class LoginView extends SurfaceView implements SurfaceHolder.Callback,Run
         super(context, attrs, defStyleAttr);
         screenWidth = context.getResources().getDisplayMetrics().widthPixels;
         screenHeight = context.getResources().getDisplayMetrics().heightPixels;
-        xScale = screenWidth / 1280f;
-        yScale = screenHeight / 720f;
+        xScale = screenWidth / 2560f;
+        yScale = screenHeight / 1440f;
+        yTranslate = 5 * yScale;
         mBUtil = new BitmapUtil(context);
         mHolder = getHolder();
         mHolder.addCallback(this);
@@ -107,12 +109,13 @@ public class LoginView extends SurfaceView implements SurfaceHolder.Callback,Run
         Matrix matrix = new Matrix();
         float f = frame % 61;
         float y;
+        float yt_frame = yTranslate / 60f;
         if (!reversal){
-            y = f * 0.16f;
+            y = f * yt_frame;
         }else {
-            y = (60 - f) * 0.16f;
+            y = (60 - f) * yt_frame;
         }
-        matrix.postTranslate(189 * xScale,160 * yScale +y);
+        matrix.postTranslate(222 * xScale,138 * yScale +y);
         matrix.postScale(x,this.y);
         mCanvas.drawBitmap(logo,matrix,mPaint);
         if (f == 60)
@@ -128,13 +131,13 @@ public class LoginView extends SurfaceView implements SurfaceHolder.Callback,Run
         }else {
             y = (60 - f) * 0.2f;
         }
-        matrix.postTranslate(0,238 * yScale + y);
+        matrix.postTranslate(0,246 * yScale + y);
         mCanvas.drawBitmap(cup,matrix,mPaint);
     }
     private void drawGold() {
         Bitmap gold = mBUtil.getBitmap("logo_gold",R.drawable.denglujiemian02);
         Matrix matrix = new Matrix();
-        matrix.postTranslate(77 * xScale,335 * yScale);
+        matrix.postTranslate(80 * xScale,338 * yScale);
         mCanvas.drawBitmap(gold,matrix,mPaint);
     }
     private void drawLoginFrame(){

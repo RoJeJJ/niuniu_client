@@ -7,3 +7,10 @@
 /build
 /captures
 .externalNativeBuild
+/gradle/
+/build.gradle
+/gradle.properties
+/gradlew
+/gradlew.bat
+/niuniu_client.iml
+/settings.gradle
