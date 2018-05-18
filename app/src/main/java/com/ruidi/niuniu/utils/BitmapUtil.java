@@ -11,22 +11,23 @@ import android.util.LruCache;
 
 
 public class BitmapUtil {
-    private LruCache<String,Bitmap> cache;
-    private Resources resources;
-    private float xScale;
-    private float yScale;
-    public BitmapUtil(Context context){
+    private static LruCache<String,Bitmap> cache;
+    private static Resources resources;
+    private static float xScale;
+    private static float yScale;
+    private BitmapUtil(){ }
+    public static void init(Context context){
         resources = context.getResources();
         int screenHeight = context.getResources().getDisplayMetrics().heightPixels;
         int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
         xScale = ((float) screenWidth)/2560;
         yScale = ((float) screenHeight)/1440;
         int maxSize = (int) Runtime.getRuntime().maxMemory();
-        int cacheSize = maxSize / 1024 / 8;
+        int cacheSize = maxSize / 4;
         cache = new LruCache<String, Bitmap>(cacheSize){
             @Override
             protected int sizeOf(String key, Bitmap value) {
-                return super.sizeOf(key, value);
+                return value.getRowBytes() * value.getHeight();
             }
 
             @Override
@@ -35,7 +36,7 @@ public class BitmapUtil {
             }
         };
     }
-    public Bitmap getBitmap(String key, @RawRes int res){
+    public static Bitmap getBitmap(String key, @RawRes int res){
         Bitmap src = cache.get(key);
         if (src != null)
             return src;
@@ -44,7 +45,6 @@ public class BitmapUtil {
         options.inPurgeable = true;
         options.inInputShareable = true;
         src = BitmapFactory.decodeResource(resources,res,options);
-        Log.i(key,"width:"+src.getWidth()+",height:"+src.getHeight());
         Matrix matrix = new Matrix();
         matrix.postScale(xScale,yScale);
         Bitmap scaleSrc = Bitmap.createBitmap(src,0,0,src.getWidth(),src.getHeight(),matrix,true);
